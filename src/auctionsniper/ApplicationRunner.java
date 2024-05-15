@@ -3,6 +3,9 @@ package auctionsniper;
 public class ApplicationRunner {
   public static final String SNIPER_ID = "sniper";
   public static final String SNIPER_PASSWORD = "sniper";
+  public static final String STATUS_JOINING = "joining";
+  public static final String STATUS_LOST = "lost";
+
   private AuctionSniperDriver driver;
 
   public void startBiddingIn(final FakeAuctionServer auction) {
@@ -10,13 +13,13 @@ public class ApplicationRunner {
       @Override
       public void run() {
         try {
-          Main.main(XMPP_HOSTNAME, SNIPER_ID, SNIPER_PASSWORD, auction.getItemId());
+          Main.main(FakeAuctionServer.XMPP_HOSTNAME, SNIPER_ID, SNIPER_PASSWORD, auction.getItemId());
         } catch (Exception e) {
           e.printStackTrace();
         }
       }
     };
-    thread.setDeamon(true);
+    thread.setDaemon(true);
     thread.start();
     driver = new AuctionSniperDriver(1000);
     driver.showsSniperStatus(STATUS_JOINING);
