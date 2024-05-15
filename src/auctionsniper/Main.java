@@ -3,8 +3,6 @@ package auctionsniper;
 import javax.swing.SwingUtilities;
 
 public class Main {
-  public static final String MAIN_WINDOW_NAME = "Auction Sniper";
-
   private MainWindow ui;
 
   public Main() throws Exception {
