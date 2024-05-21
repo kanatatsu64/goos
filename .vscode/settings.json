@@ -1,0 +1,10 @@
+{
+  "java.test.config": [
+    {
+        "name": "myConfiguration",
+        "workingDirectory": "${workspaceFolder}",
+        "vmargs": [ "-Xmx512M" ],
+        "env": { "key": "value" },
+    },
+  ]
+}

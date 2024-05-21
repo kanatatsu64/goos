@@ -3,6 +3,7 @@ package auctionsniper;
 public class ApplicationRunner {
   public static final String SNIPER_ID = "sniper";
   public static final String SNIPER_PASSWORD = "sniper";
+  public static final String SNIPER_XMPP_ID = "sniper@98ee5241f8d0/Auction";
 
   private AuctionSniperDriver driver;
 
@@ -19,12 +20,16 @@ public class ApplicationRunner {
     };
     thread.setDaemon(true);
     thread.start();
-    driver = new AuctionSniperDriver(1000);
+    driver = new AuctionSniperDriver(3000);
     driver.showsSniperStatus(MainWindow.STATUS_JOINING);
   }
 
   public void showsSniperHasLostAuction() {
     driver.showsSniperStatus(MainWindow.STATUS_LOST);
+  }
+
+  public void hasShownSniperIsBidding() {
+    driver.showsSniperStatus(MainWindow.STATUS_BIDDING);
   }
 
   public void stop() {
