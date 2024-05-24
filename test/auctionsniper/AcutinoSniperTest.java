@@ -7,6 +7,7 @@ import org.junit.Test;
 import auctionsniper.Auction;
 import auctionsniper.AuctionSniper;
 import auctionsniper.SniperListener;
+import auctionsniper.AuctionEventListener.PriceSource;
 
 public class AcutinoSniperTest {
   private final Mockery context = new Mockery();
@@ -38,7 +39,7 @@ public class AcutinoSniperTest {
       }
     });
 
-    sniper.currentPrice(price, increment);
+    sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
 
     context.assertIsSatisfied();
   }

@@ -2,6 +2,7 @@ package test.e2e;
 
 import org.junit.After;
 import org.junit.Test;
+
 import auctionsniper.FakeAuctionServer;
 import auctionsniper.ApplicationRunner;
 
@@ -13,7 +14,7 @@ public class AuctionSniperEndToEndTest {
   public void sniperJoinsAuctionUnitlAuctionCloses() throws Exception {
     auction.startSellingItem();
     application.startBiddingIn(auction);
-    auction.hasReceivedJoinRequestFromSniper(ApplicationRunner.SNIPER_XMPP_ID);
+    auction.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID);
     auction.announceClosed();
     application.showsSniperHasLostAuction();
   }
@@ -23,7 +24,7 @@ public class AuctionSniperEndToEndTest {
     auction.startSellingItem();
 
     application.startBiddingIn(auction);
-    auction.hasReceivedJoinRequestFromSniper(ApplicationRunner.SNIPER_XMPP_ID);
+    auction.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID);
 
     auction.reportPrice(1000, 98, "other bidder");
 
@@ -32,6 +33,25 @@ public class AuctionSniperEndToEndTest {
 
     auction.announceClosed();
     application.showsSniperHasLostAuction();
+  }
+
+  @Test
+  public void sniperWinsAnAuctionByBiddingHigher() throws Exception {
+    auction.startSellingItem();
+
+    application.startBiddingIn(auction);
+    auction.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID);
+
+    auction.reportPrice(1000, 98, "other bidder");
+    application.hasShownSniperIsBidding();
+
+    auction.hasReceivedBid(1098, ApplicationRunner.SNIPER_XMPP_ID);
+
+    auction.reportPrice(1098, 97, ApplicationRunner.SNIPER_XMPP_ID);
+    application.hasShownSniperIsWinning();
+
+    auction.announceClosed();
+    application.showsSniperHasWonAuction();
   }
 
   @After
