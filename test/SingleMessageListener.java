@@ -1,4 +1,4 @@
-package auctionsniper;
+package test;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import static java.util.concurrent.TimeUnit.SECONDS;

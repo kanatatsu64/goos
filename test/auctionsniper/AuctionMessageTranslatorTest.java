@@ -1,15 +1,16 @@
 package test.auctionsniper;
 
+import static test.ApplicationRunner.SNIPER_ID;
+
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
 
-import static auctionsniper.ApplicationRunner.SNIPER_ID;
-import auctionsniper.AuctionEventListener;
-import auctionsniper.AuctionEventListener.PriceSource;
-import auctionsniper.AuctionMessageTranslator;
+import auctionsniper.interfaces.AuctionEventListener;
+import auctionsniper.interfaces.AuctionEventListener.PriceSource;
+import auctionsniper.xmpp.AuctionMessageTranslator;
 
 public class AuctionMessageTranslatorTest {
   public static final Chat UNUSED_CHAT = null;

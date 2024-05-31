@@ -14,11 +14,11 @@ import org.jmock.Mockery;
 import org.junit.Before;
 import org.junit.Test;
 
-import auctionsniper.MainWindow;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
-import auctionsniper.SnipersTableModel;
-import auctionsniper.SnipersTableModel.Column;
+import auctionsniper.ui.MainWindow;
+import auctionsniper.ui.SnipersTableModel;
+import auctionsniper.ui.SnipersTableModel.Column;
 
 public class SnipersTableModelTest {
 

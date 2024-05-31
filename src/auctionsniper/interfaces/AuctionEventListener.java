@@ -1,4 +1,4 @@
-package auctionsniper;
+package auctionsniper.interfaces;
 
 public interface AuctionEventListener {
   enum PriceSource {

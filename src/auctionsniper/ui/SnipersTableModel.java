@@ -1,6 +1,10 @@
-package auctionsniper;
+package auctionsniper.ui;
 
 import javax.swing.table.AbstractTableModel;
+
+import auctionsniper.SniperSnapshot;
+import auctionsniper.SniperState;
+import auctionsniper.interfaces.SniperListener;
 
 public class SnipersTableModel extends AbstractTableModel implements SniperListener {
   public enum Column {

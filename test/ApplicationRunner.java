@@ -1,4 +1,7 @@
-package auctionsniper;
+package test;
+
+import auctionsniper.Main;
+import auctionsniper.ui.MainWindow;
 
 public class ApplicationRunner {
   public static final String SNIPER_ID = "sniper";

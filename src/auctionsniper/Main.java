@@ -12,6 +12,14 @@ import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
+import auctionsniper.interfaces.AuctionEventListener;
+import auctionsniper.interfaces.SniperListener;
+import auctionsniper.ui.MainWindow;
+import auctionsniper.ui.SnipersTableModel;
+import auctionsniper.xmpp.AuctionMessageTranslator;
+import auctionsniper.xmpp.SwingThreadSniperListener;
+import auctionsniper.xmpp.XMPPAuction;
+
 public class Main {
   private final SnipersTableModel snipers = new SnipersTableModel();
   private MainWindow ui;
@@ -26,8 +34,6 @@ public class Main {
   private static final String AUCTION_RESOURCE = "Auction";
   public static final String ITEM_ID_AS_LOGIN = "auction-%s";
   public static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
-  public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
-  public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
 
   public Main() throws Exception {
     startUserInterface();
@@ -43,46 +49,6 @@ public class Main {
   }
 
   private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
-    class XMPPAuction implements Auction {
-      private final Chat chat;
-
-      public XMPPAuction(Chat chat) {
-        this.chat = chat;
-      }
-
-      public void bid(int amount) {
-        sendMessage(format(BID_COMMAND_FORMAT, amount));
-      }
-
-      public void join() {
-        sendMessage(JOIN_COMMAND_FORMAT);
-      }
-
-      private void sendMessage(String message) {
-        try {
-          chat.sendMessage(message);
-        } catch (XMPPException e) {
-          e.printStackTrace();
-        }
-      }
-    }
-
-    class SwingThreadSniperListener implements SniperListener {
-      private SniperListener listener;
-
-      public SwingThreadSniperListener(SniperListener listener) {
-        this.listener = listener;
-      }
-
-      public void sniperStateChanged(SniperSnapshot sniperSnapshot) {
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            listener.sniperStateChanged(sniperSnapshot);
-          }
-        });
-      }
-    }
-
     disconnectWhenUICloses(connection);
 
     final Chat chat = connection.getChatManager().createChat(

@@ -9,12 +9,12 @@ import org.jmock.Mockery;
 import org.jmock.States;
 import org.junit.Test;
 
-import auctionsniper.Auction;
 import auctionsniper.AuctionSniper;
-import auctionsniper.SniperListener;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
-import auctionsniper.AuctionEventListener.PriceSource;
+import auctionsniper.interfaces.Auction;
+import auctionsniper.interfaces.SniperListener;
+import auctionsniper.interfaces.AuctionEventListener.PriceSource;
 
 public class AcutinoSniperTest {
   private final String ITEM_ID = "item id";

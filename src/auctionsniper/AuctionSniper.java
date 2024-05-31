@@ -1,5 +1,9 @@
 package auctionsniper;
 
+import auctionsniper.interfaces.Auction;
+import auctionsniper.interfaces.AuctionEventListener;
+import auctionsniper.interfaces.SniperListener;
+
 public class AuctionSniper implements AuctionEventListener {
   private final SniperListener sniperListener;
   private final Auction auction;
