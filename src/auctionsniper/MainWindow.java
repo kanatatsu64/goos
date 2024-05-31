@@ -9,11 +9,12 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 public class MainWindow extends JFrame {
+  public static final String APPLICATION_TITLE = "Auction Sniper";
   public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
   public static final String SNIPERS_TABLE_NAME = "snipers table";
 
   public MainWindow(SnipersTableModel snipers) {
-    super("Auction Sniper");
+    super(APPLICATION_TITLE);
 
     setName(MAIN_WINDOW_NAME);
     fillContentPane(makeSnipersTable(snipers));
