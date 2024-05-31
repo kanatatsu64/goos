@@ -2,9 +2,9 @@ package test.auctionsniper;
 
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
-import org.junit.Test;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.junit.Test;
 
 import static auctionsniper.ApplicationRunner.SNIPER_ID;
 import auctionsniper.AuctionEventListener;
