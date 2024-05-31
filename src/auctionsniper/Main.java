@@ -73,26 +73,10 @@ public class Main {
         this.ui = ui;
       }
 
-      public void sniperLost() {
-        showsStatus(MainWindow.STATUS_LOST);
-      }
-
-      public void sniperWon() {
-        showsStatus(MainWindow.STATUS_WON);
-      }
-
       public void sniperStateChanged(SniperSnapshot sniperSnapshot) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             ui.sniperStateChanged(sniperSnapshot);
-          }
-        });
-      }
-
-      private void showsStatus(String status) {
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            ui.showStatusText(status);
           }
         });
       }
