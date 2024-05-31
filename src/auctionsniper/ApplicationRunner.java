@@ -24,23 +24,23 @@ public class ApplicationRunner {
     thread.setDaemon(true);
     thread.start();
     driver = new AuctionSniperDriver(3000);
-    driver.showsSniperStatus(MainWindow.STATUS_JOINING);
+    driver.showsSniperStatus("Joining");
   }
 
   public void showsSniperHasLostAuction(int lastPrice) {
-    driver.showsSniperStatus(itemId, lastPrice, lastPrice, MainWindow.STATUS_LOST);
+    driver.showsSniperStatus(itemId, lastPrice, lastPrice, "Lost");
   }
 
   public void showsSniperHasWonAuction(int lastPrice) {
-    driver.showsSniperStatus(itemId, lastPrice, lastPrice, MainWindow.STATUS_WON);
+    driver.showsSniperStatus(itemId, lastPrice, lastPrice, "Won");
   }
 
   public void hasShownSniperIsBidding(int lastPrice, int lastBid) {
-    driver.showsSniperStatus(itemId, lastPrice, lastBid, MainWindow.STATUS_BIDDING);
+    driver.showsSniperStatus(itemId, lastPrice, lastBid, "Bidding");
   }
 
   public void hasShownSniperIsWinning(int winningBid) {
-    driver.showsSniperStatus(itemId, winningBid, winningBid, MainWindow.STATUS_WINNING);
+    driver.showsSniperStatus(itemId, winningBid, winningBid, "Winning");
   }
 
   public void stop() {
