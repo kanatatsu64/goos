@@ -13,6 +13,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
 public class Main {
+  private final SnipersTableModel snipers = new SnipersTableModel();
   private MainWindow ui;
   @SuppressWarnings("unused")
   private Chat notToBeGCd;
@@ -66,17 +67,17 @@ public class Main {
       }
     }
 
-    class SniperStateDisplayer implements SniperListener {
-      private MainWindow ui;
+    class SwingThreadSniperListener implements SniperListener {
+      private SniperListener listener;
 
-      public SniperStateDisplayer(MainWindow ui) {
-        this.ui = ui;
+      public SwingThreadSniperListener(SniperListener listener) {
+        this.listener = listener;
       }
 
       public void sniperStateChanged(SniperSnapshot sniperSnapshot) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            ui.sniperStateChanged(sniperSnapshot);
+            listener.sniperStateChanged(sniperSnapshot);
           }
         });
       }
@@ -90,7 +91,7 @@ public class Main {
     this.notToBeGCd = chat;
 
     XMPPAuction auction = new XMPPAuction(chat);
-    SniperListener sniperListener = new SniperStateDisplayer(ui);
+    SniperListener sniperListener = new SwingThreadSniperListener(snipers);
     AuctionEventListener sniper = new AuctionSniper(auction, sniperListener, itemId);
     MessageListener messageListener = new AuctionMessageTranslator(connection.getUser(), sniper);
 
@@ -123,7 +124,7 @@ public class Main {
   private void startUserInterface() throws Exception {
     SwingUtilities.invokeAndWait(new Runnable() {
       public void run() {
-        ui = new MainWindow();
+        ui = new MainWindow(snipers);
       }
     });
   }

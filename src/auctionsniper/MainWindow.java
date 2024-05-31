@@ -6,24 +6,20 @@ import java.awt.Container;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 
 public class MainWindow extends JFrame {
   public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
   public static final String SNIPERS_TABLE_NAME = "snipers table";
 
-  private final SnipersTableModel snipers = new SnipersTableModel();
-
-  public MainWindow() {
+  public MainWindow(SnipersTableModel snipers) {
     super("Auction Sniper");
+
     setName(MAIN_WINDOW_NAME);
-    fillContentPane(makeSnipersTable());
+    fillContentPane(makeSnipersTable(snipers));
     pack();
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setVisible(true);
-  }
-
-  public void sniperStateChanged(SniperSnapshot sniperSnapshot) {
-    snipers.sniperStateChanged(sniperSnapshot);
   }
 
   private void fillContentPane(JTable snipersTable) {
@@ -33,8 +29,8 @@ public class MainWindow extends JFrame {
     contentPane.add(new JScrollPane(snipersTable), BorderLayout.CENTER);
   }
 
-  private JTable makeSnipersTable() {
-    final JTable snipersTable = new JTable(snipers);
+  private JTable makeSnipersTable(AbstractTableModel model) {
+    final JTable snipersTable = new JTable(model);
     snipersTable.setName(SNIPERS_TABLE_NAME);
     return snipersTable;
   }
