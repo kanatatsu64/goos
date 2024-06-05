@@ -12,7 +12,6 @@ import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
-import auctionsniper.interfaces.AuctionEventListener;
 import auctionsniper.interfaces.SniperListener;
 import auctionsniper.ui.MainWindow;
 import auctionsniper.ui.SnipersTableModel;
@@ -58,11 +57,13 @@ public class Main {
 
     XMPPAuction auction = new XMPPAuction(chat);
     SniperListener sniperListener = new SwingThreadSniperListener(snipers);
-    AuctionEventListener sniper = new AuctionSniper(auction, sniperListener, itemId);
+    SniperSnapshot snapshot = SniperSnapshot.joining(itemId);
+    AuctionSniper sniper = new AuctionSniper(auction, sniperListener, snapshot);
     MessageListener messageListener = new AuctionMessageTranslator(connection.getUser(), sniper);
 
     chat.addMessageListener(messageListener);
 
+    sniperListener.sniperStateChanged(snapshot);
     auction.join();
   }
 

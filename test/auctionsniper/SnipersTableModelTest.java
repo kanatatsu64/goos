@@ -16,7 +16,6 @@ import org.junit.Test;
 
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
-import auctionsniper.ui.MainWindow;
 import auctionsniper.ui.SnipersTableModel;
 import auctionsniper.ui.SnipersTableModel.Column;
 

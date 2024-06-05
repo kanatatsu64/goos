@@ -24,7 +24,8 @@ public class AcutinoSniperTest {
 
   private final SniperListener sniperListener = context.mock(SniperListener.class);
   private final Auction auction = context.mock(Auction.class);
-  private final AuctionSniper sniper = new AuctionSniper(auction, sniperListener, ITEM_ID);
+  private final SniperSnapshot snapshot = SniperSnapshot.joining(ITEM_ID);
+  private final AuctionSniper sniper = new AuctionSniper(auction, sniperListener, snapshot);
 
   @Test
   public void reportsLostIfAuctionClosesImmediately() {
