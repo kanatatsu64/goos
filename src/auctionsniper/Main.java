@@ -1,19 +1,18 @@
 package auctionsniper;
 
+import static org.junit.Assert.assertEquals;
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
-import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
-import auctionsniper.interfaces.AuctionEventListener;
 import auctionsniper.interfaces.SniperListener;
 import auctionsniper.interfaces.UserRequestListener;
-import auctionsniper.ui.Announcer;
 import auctionsniper.ui.MainWindow;
 import auctionsniper.ui.SnipersTableModel;
 import auctionsniper.xmpp.SwingThreadSniperListener;
