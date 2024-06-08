@@ -1,6 +1,10 @@
 package auctionsniper.ui;
 
+import java.util.ArrayList;
+
 import javax.swing.table.AbstractTableModel;
+
+import com.objogate.exception.Defect;
 
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
@@ -54,8 +58,13 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
       "Won"
   };
 
-  private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
-  private SniperSnapshot snapshot = STARTING_UP;
+  private ArrayList<SniperSnapshot> snapshots = new ArrayList<SniperSnapshot>();
+
+  public void addSniper(SniperSnapshot snapshot) {
+    snapshots.add(snapshot);
+    int row = getRowCount() - 1;
+    fireTableRowsInserted(row, row);
+  }
 
   @Override
   public int getColumnCount() {
@@ -64,12 +73,12 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
 
   @Override
   public int getRowCount() {
-    return 1;
+    return snapshots.size();
   }
 
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
-    return Column.at(columnIndex).valueIn(snapshot);
+    return Column.at(columnIndex).valueIn(snapshots.get(rowIndex));
   }
 
   @Override
@@ -77,12 +86,23 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
     return Column.at(columnIndex).name;
   }
 
-  public void sniperStateChanged(SniperSnapshot newSniperSnapshot) {
-    snapshot = newSniperSnapshot;
-    fireTableRowsUpdated(0, 0);
+  public void sniperStateChanged(SniperSnapshot snapshot) {
+    int row = rowMatching(snapshot);
+    snapshots.set(row, snapshot);
+    fireTableRowsUpdated(row, row);
   }
 
   static public String textFor(SniperState state) {
     return STATUS_TEXT[state.ordinal()];
+  }
+
+  private int rowMatching(SniperSnapshot snapshot) {
+    for (int i = 0; i < snapshots.size(); i++) {
+      if (snapshot.isForSameItemAs(snapshots.get(i))) {
+        return i;
+      }
+    }
+
+    throw new Defect("Cannot find match for " + snapshot);
   }
 }
