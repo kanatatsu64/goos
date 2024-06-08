@@ -14,6 +14,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
 import auctionsniper.interfaces.SniperListener;
+import auctionsniper.interfaces.UserRequestListener;
 import auctionsniper.ui.MainWindow;
 import auctionsniper.ui.SnipersTableModel;
 import auctionsniper.xmpp.AuctionMessageTranslator;
@@ -42,36 +43,28 @@ public class Main {
     Main main = new Main();
     XMPPConnection connection = connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
     main.disconnectWhenUICloses(connection);
-
-    for (int i = 3; i < args.length; i++) {
-      main.joinAuction(connection, args[i]);
-    }
+    main.addUserRequestListenerFor(connection);
   }
 
-  private void joinAuction(XMPPConnection connection, String itemId) throws Exception {
-    safelyAddItemToModel(itemId);
-
-    final Chat chat = connection.getChatManager().createChat(
-        auctionId(itemId, connection),
-        null);
-    this.notToBeGCd.add(chat);
-
-    XMPPAuction auction = new XMPPAuction(chat);
-    SniperListener sniperListener = new SwingThreadSniperListener(snipers);
-    SniperSnapshot snapshot = SniperSnapshot.joining(itemId);
-    AuctionSniper sniper = new AuctionSniper(auction, sniperListener, snapshot);
-    MessageListener messageListener = new AuctionMessageTranslator(connection.getUser(), sniper);
-
-    chat.addMessageListener(messageListener);
-
-    auction.join();
-  }
-
-  private void safelyAddItemToModel(final String itemId) throws Exception {
-    SwingUtilities.invokeAndWait(new Runnable() {
-      @Override
-      public void run() {
+  private void addUserRequestListenerFor(final XMPPConnection connection) {
+    ui.addUserRequestListener(new UserRequestListener() {
+      public void joinAuction(String itemId) {
         snipers.addSniper(SniperSnapshot.joining(itemId));
+
+        final Chat chat = connection.getChatManager().createChat(
+            auctionId(itemId, connection),
+            null);
+        notToBeGCd.add(chat);
+
+        XMPPAuction auction = new XMPPAuction(chat);
+        SniperListener sniperListener = new SwingThreadSniperListener(snipers);
+        SniperSnapshot snapshot = SniperSnapshot.joining(itemId);
+        AuctionSniper sniper = new AuctionSniper(auction, sniperListener, snapshot);
+        MessageListener messageListener = new AuctionMessageTranslator(connection.getUser(), sniper);
+
+        chat.addMessageListener(messageListener);
+
+        auction.join();
       }
     });
   }
