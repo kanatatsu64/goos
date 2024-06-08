@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 import auctionsniper.interfaces.Auction;
 import auctionsniper.interfaces.AuctionEventListener;
-import auctionsniper.xmpp.XMPPAuction;
+import auctionsniper.xmpp.XMPPAuctionHouse;
 import test.ApplicationRunner;
 import test.FakeAuctionServer;
 
@@ -19,16 +19,15 @@ public class XMPPAuctionTest {
 
   @Test
   public void receivesEventsFromAuctionServerAfterJoining() throws Exception {
-    XMPPConnection connection = connection(
+    XMPPAuctionHouse auctionHouse = XMPPAuctionHouse.connect(
         FakeAuctionServer.XMPP_HOSTNAME,
         ApplicationRunner.SNIPER_ID,
-        ApplicationRunner.SNIPER_PASSWORD,
-        FakeAuctionServer.AUCTION_RESOURCE);
+        ApplicationRunner.SNIPER_PASSWORD);
     CountDownLatch auctionWasClosed = new CountDownLatch(1);
 
     server.startSellingItem();
 
-    Auction auction = new XMPPAuction(connection, server.getItemId());
+    Auction auction = auctionHouse.auctionFor(server.getItemId());
     auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
 
     auction.join();
