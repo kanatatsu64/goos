@@ -11,7 +11,6 @@ import auctionsniper.ui.SnipersTableModel;
 import auctionsniper.xmpp.XMPPAuctionHouse;
 
 public class Main {
-  private final SnipersTableModel snipers = new SnipersTableModel();
   private final SniperPortfolio portfolio = new SniperPortfolio();
   private MainWindow ui;
 
@@ -34,7 +33,6 @@ public class Main {
   }
 
   private void addUserRequestListenerFor(final AuctionHouse auctionHouse) {
-    portfolio.addPortfolioListener(snipers);
     SniperLauncher sniperLauncher = new SniperLauncher(portfolio, auctionHouse);
     ui.addUserRequestListener(sniperLauncher);
   }
@@ -51,7 +49,7 @@ public class Main {
   private void startUserInterface() throws Exception {
     SwingUtilities.invokeAndWait(new Runnable() {
       public void run() {
-        ui = new MainWindow(snipers);
+        ui = new MainWindow(portfolio);
       }
     });
   }

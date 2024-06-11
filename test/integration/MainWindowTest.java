@@ -4,17 +4,15 @@ import org.junit.Test;
 import com.objogate.wl.swing.probe.ValueMatcherProbe;
 import static org.hamcrest.Matchers.equalTo;
 
-import javax.swing.SwingUtilities;
-
+import auctionsniper.SniperPortfolio;
 import auctionsniper.interfaces.UserRequestListener;
 import auctionsniper.ui.MainWindow;
-import auctionsniper.ui.SnipersTableModel;
 
 import test.AuctionSniperDriver;
 
 public class MainWindowTest {
-  private final SnipersTableModel tableModel = new SnipersTableModel();
-  private final MainWindow mainWindow = new MainWindow(tableModel);
+  private final SniperPortfolio portfolio = new SniperPortfolio();
+  private final MainWindow mainWindow = new MainWindow(portfolio);
   private final AuctionSniperDriver driver = new AuctionSniperDriver(1000);
 
   @Test
