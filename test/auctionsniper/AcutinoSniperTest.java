@@ -30,11 +30,6 @@ public class AcutinoSniperTest {
 
   @Before
   public void addSniperListener() {
-    context.checking(new Expectations() {
-      {
-        allowing(sniperListener).sniperAdded(with(aSniperThatIs(SniperState.JOINING)));
-      }
-    });
     sniper.addSniperListener(sniperListener);
   }
 

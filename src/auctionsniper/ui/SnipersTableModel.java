@@ -62,8 +62,6 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
   };
 
   private ArrayList<SniperSnapshot> snapshots = new ArrayList<SniperSnapshot>();
-  @SuppressWarnings("unused")
-  private ArrayList<AuctionSniper> notToBeGCd = new ArrayList<AuctionSniper>();
 
   @Override
   public int getColumnCount() {
@@ -91,17 +89,13 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
     fireTableRowsUpdated(row, row);
   }
 
-  public void sniperAdded(SniperSnapshot snapshot) {
-    snapshots.add(snapshot);
-    int row = getRowCount() - 1;
-    fireTableRowsInserted(row, row);
-  }
-
   public void sniperAdded(AuctionSniper sniper) {
-    notToBeGCd.add(sniper);
-
     SniperListener sniperListener = new SwingThreadSniperListener(this);
     sniper.addSniperListener(sniperListener);
+
+    snapshots.add(sniper.getSnapshot());
+    int row = getRowCount() - 1;
+    fireTableRowsInserted(row, row);
   }
 
   static public String textFor(SniperState state) {
