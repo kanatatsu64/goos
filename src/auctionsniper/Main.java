@@ -12,6 +12,7 @@ import auctionsniper.xmpp.XMPPAuctionHouse;
 
 public class Main {
   private final SnipersTableModel snipers = new SnipersTableModel();
+  private final SniperPortfolio portfolio = new SniperPortfolio();
   private MainWindow ui;
 
   private static final int ARG_HOSTNAME = 0;
@@ -33,7 +34,8 @@ public class Main {
   }
 
   private void addUserRequestListenerFor(final AuctionHouse auctionHouse) {
-    SniperLauncher sniperLauncher = new SniperLauncher(snipers, auctionHouse);
+    portfolio.addPortfolioListener(snipers);
+    SniperLauncher sniperLauncher = new SniperLauncher(portfolio, auctionHouse);
     ui.addUserRequestListener(sniperLauncher);
   }
 

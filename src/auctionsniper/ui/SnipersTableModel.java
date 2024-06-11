@@ -9,11 +9,11 @@ import com.objogate.exception.Defect;
 import auctionsniper.AuctionSniper;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
-import auctionsniper.interfaces.SniperCollector;
 import auctionsniper.interfaces.SniperListener;
+import auctionsniper.interfaces.PortfolioListener;
 import auctionsniper.xmpp.SwingThreadSniperListener;
 
-public class SnipersTableModel extends AbstractTableModel implements SniperListener, SniperCollector {
+public class SnipersTableModel extends AbstractTableModel implements SniperListener, PortfolioListener {
   public enum Column {
     ITEM_IDENTIFIER("Item") {
       @Override
@@ -97,7 +97,7 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
     fireTableRowsInserted(row, row);
   }
 
-  public void addSniper(AuctionSniper sniper) {
+  public void sniperAdded(AuctionSniper sniper) {
     notToBeGCd.add(sniper);
 
     SniperListener sniperListener = new SwingThreadSniperListener(this);
