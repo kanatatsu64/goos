@@ -19,4 +19,12 @@ public class SwingThreadSniperListener implements SniperListener {
       }
     });
   }
+
+  public void sniperAdded(SniperSnapshot sniperSnapshot) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        listener.sniperAdded(sniperSnapshot);
+      }
+    });
+  }
 }

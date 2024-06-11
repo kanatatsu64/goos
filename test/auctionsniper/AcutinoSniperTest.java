@@ -7,6 +7,7 @@ import org.hamcrest.Matcher;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
+import org.junit.Before;
 import org.junit.Test;
 
 import auctionsniper.AuctionSniper;
@@ -25,7 +26,17 @@ public class AcutinoSniperTest {
   private final SniperListener sniperListener = context.mock(SniperListener.class);
   private final Auction auction = context.mock(Auction.class);
   private final SniperSnapshot snapshot = SniperSnapshot.joining(ITEM_ID);
-  private final AuctionSniper sniper = new AuctionSniper(auction, sniperListener, snapshot);
+  private final AuctionSniper sniper = new AuctionSniper(auction, snapshot);
+
+  @Before
+  public void addSniperListener() {
+    context.checking(new Expectations() {
+      {
+        allowing(sniperListener).sniperAdded(with(aSniperThatIs(SniperState.JOINING)));
+      }
+    });
+    sniper.addSniperListener(sniperListener);
+  }
 
   @Test
   public void reportsLostIfAuctionClosesImmediately() {
