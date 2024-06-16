@@ -92,9 +92,9 @@ public class AuctionMessageTranslatorTest {
       }
     });
 
-    Message message = new Message();
-    message.setBody("SOLVersion: 1.1; CurrentPrice: 234; Increment: 5; Bidder: " + SNIPER_ID + ";");
-    translator.processMessage(UNUSED_CHAT, message);
+    String badMessage = "SOLVersion: 1.1; CurrentPrice: 234; Increment: 5; Bidder: " + SNIPER_ID + ";";
+    expectFailureWithMessage(badMessage);
+    translator.processMessage(UNUSED_CHAT, message(badMessage));
   }
 
   private Message message(String body) {
