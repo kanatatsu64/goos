@@ -8,21 +8,26 @@ import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
 
 import auctionsniper.interfaces.AuctionEventListener;
+import auctionsniper.interfaces.FailureReporter;
 import auctionsniper.interfaces.AuctionEventListener.PriceSource;
 
 public class AuctionMessageTranslator implements MessageListener {
   private final String sniperId;
   private final AuctionEventListener listener;
+  private final FailureReporter failureReporter;
 
-  public AuctionMessageTranslator(String sniperId, AuctionEventListener listener) {
+  public AuctionMessageTranslator(String sniperId, AuctionEventListener listener, FailureReporter failureReporter) {
     this.sniperId = sniperId;
     this.listener = listener;
+    this.failureReporter = failureReporter;
   }
 
   public void processMessage(Chat chat, Message message) {
+    String messageBody = message.getBody();
     try {
-      translate(message.getBody());
+      translate(messageBody);
     } catch (Exception parseException) {
+      failureReporter.cannotTranslateMessage(sniperId, messageBody, parseException);
       listener.auctionFailed();
     }
   }

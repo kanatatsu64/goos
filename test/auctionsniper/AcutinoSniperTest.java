@@ -39,7 +39,6 @@ public class AcutinoSniperTest {
   @After
   public void assertContext() {
     context.assertIsSatisfied();
-  
   }
 
   @Test
