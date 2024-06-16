@@ -29,12 +29,18 @@ public class AuctionSniperDriver extends JFrameDriver {
         new AWTEventQueueProber(timeoutMillis, 100));
   }
 
-  public void startBiddingFor(String itemId) {
+  public void startBiddingFor(String itemId, int stopPrice) {
     // itemIdField().replaceAllText(itemId);
-    ComponentSelector<JTextField> textFieldFinder = itemIdField().component();
-    textFieldFinder.probe();
-    JTextField textField = textFieldFinder.component();
-    textField.setText(itemId);
+    ComponentSelector<JTextField> itemIdFieldFinder = itemIdField().component();
+    itemIdFieldFinder.probe();
+    JTextField itemIdField = itemIdFieldFinder.component();
+    itemIdField.setText(itemId);
+
+    // itemStopPriceField().replaceAllText(stopPrice);
+    ComponentSelector<JTextField> stopPriceFieldFinder = stopPriceField().component();
+    stopPriceFieldFinder.probe();
+    JTextField stopPriceField = stopPriceFieldFinder.component();
+    stopPriceField.setText(String.valueOf(stopPrice));
 
     // bidButton().click();
     ComponentSelector<JButton> buttonFinder = bidButton().component();
@@ -45,6 +51,10 @@ public class AuctionSniperDriver extends JFrameDriver {
 
   private JTextFieldDriver itemIdField() {
     return new JTextFieldDriver(this, JTextField.class, named(MainWindow.NEW_ITEM_ID_NAME));
+  }
+
+  private JTextFieldDriver stopPriceField() {
+    return new JTextFieldDriver(this, JTextField.class, named(MainWindow.NEW_ITEM_STOP_PRICE_NAME));
   }
 
   private JButtonDriver bidButton() {

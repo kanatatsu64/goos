@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import auctionsniper.AuctionSniper;
+import auctionsniper.Item;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
 import auctionsniper.interfaces.Auction;
@@ -27,8 +28,14 @@ public class SnipersTableModelTest {
   private TableModelListener listener = context.mock(TableModelListener.class);
   private Auction auction = context.mock(Auction.class);
 
-  private AuctionSniper sniper1 = new AuctionSniper(auction, SniperSnapshot.joining("item 1"));
-  private AuctionSniper sniper2 = new AuctionSniper(auction, SniperSnapshot.joining("item 2"));
+  private AuctionSniper sniper1 = new AuctionSniper(
+      auction,
+      SniperSnapshot.joining("item 1"),
+      new Item("item 1", 1000));
+  private AuctionSniper sniper2 = new AuctionSniper(
+      auction,
+      SniperSnapshot.joining("item 2"),
+      new Item("item 2", 1000));
 
   private final SnipersTableModel model = new SnipersTableModel();
 
