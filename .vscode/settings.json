@@ -3,7 +3,7 @@
     {
         "name": "myConfiguration",
         "workingDirectory": "${workspaceFolder}",
-        "vmargs": [ "-Xmx512M" ],
+        "vmargs": [ "-Xmx512M", "--add-opens=java.logging/java.util.logging=ALL-UNNAMED" ],
         "env": { "key": "value" },
     },
   ]

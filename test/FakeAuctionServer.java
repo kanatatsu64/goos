@@ -65,6 +65,10 @@ public class FakeAuctionServer {
     currentChat.sendMessage(CLOSE_EVENT_FORMAT);
   }
 
+  public void sendInvalidMessageContaining(String invalidMessage) throws XMPPException {
+    currentChat.sendMessage(invalidMessage);
+  }
+
   public void stop() {
     connection.disconnect();
   }

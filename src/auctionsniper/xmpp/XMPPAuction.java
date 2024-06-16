@@ -8,6 +8,7 @@ import org.jivesoftware.smack.XMPPException;
 
 import auctionsniper.interfaces.Auction;
 import auctionsniper.interfaces.AuctionEventListener;
+import auctionsniper.interfaces.FailureReporter;
 import auctionsniper.ui.Announcer;
 
 public class XMPPAuction implements Auction {
@@ -21,12 +22,10 @@ public class XMPPAuction implements Auction {
   private final Chat chat;
   private final Announcer<AuctionEventListener> auctionEventListeners = Announcer.to(AuctionEventListener.class);
 
-  public XMPPAuction(XMPPConnection connection, String itemId) {
-    chat = connection.getChatManager().createChat(
-        auctionId(itemId, connection),
-        new AuctionMessageTranslator(
-            connection.getUser(),
-            auctionEventListeners.announce()));
+  public XMPPAuction(XMPPConnection connection, String itemId, FailureReporter failureReporter) {
+    AuctionMessageTranslator translator = translatorFor(connection, failureReporter);
+    this.chat = connection.getChatManager().createChat(auctionId(itemId, connection), translator);
+    addAuctionEventListener(chatDisconnectorFor(translator));
   }
 
   private static String auctionId(String itemId, XMPPConnection connection) {
@@ -43,6 +42,27 @@ public class XMPPAuction implements Auction {
 
   public void join() {
     sendMessage(JOIN_COMMAND_FORMAT);
+  }
+
+  private AuctionMessageTranslator translatorFor(XMPPConnection connection, FailureReporter failureReporter) {
+    return new AuctionMessageTranslator(connection.getUser(), auctionEventListeners.announce(), failureReporter);
+  }
+
+  private AuctionEventListener chatDisconnectorFor(final AuctionMessageTranslator translator) {
+    return new AuctionEventListener() {
+      @Override
+      public void auctionFailed() {
+        chat.removeMessageListener(translator);
+      }
+
+      @Override
+      public void auctionClosed() {
+      }
+
+      @Override
+      public void currentPrice(int price, int increment, PriceSource source) {
+      }
+    };
   }
 
   private void sendMessage(String message) {
