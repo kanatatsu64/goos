@@ -59,7 +59,8 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
       "Losing",
       "Winning",
       "Lost",
-      "Won"
+      "Won",
+      "Failed"
   };
 
   private ArrayList<SniperSnapshot> snapshots = new ArrayList<SniperSnapshot>();

@@ -23,7 +23,8 @@ public class AuctionSniper implements AuctionEventListener {
   }
 
   public void auctionFailed() {
-    // TODO
+    snapshot = snapshot.failed();
+    notifyChange();
   }
 
   public void currentPrice(int price, int increment, PriceSource priceSource) {

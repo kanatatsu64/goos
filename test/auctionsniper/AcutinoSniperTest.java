@@ -7,6 +7,7 @@ import org.hamcrest.Matcher;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,6 +34,12 @@ public class AcutinoSniperTest {
   @Before
   public void addSniperListener() {
     sniper.addSniperListener(sniperListener);
+  }
+
+  @After
+  public void assertContext() {
+    context.assertIsSatisfied();
+  
   }
 
   @Test
@@ -208,6 +215,17 @@ public class AcutinoSniperTest {
     sniper.currentPrice(2345, 25, PriceSource.FromOtherBidder);
   }
 
+  @Test
+  public void reportsFailedIfauctionFailsWhenBidding() {
+    ignoringAuction();
+    allowingSniperBidding();
+
+    expectSniperToFailWhenItIs("bidding");
+
+    sniper.currentPrice(123, 45, PriceSource.FromOtherBidder);
+    sniper.auctionFailed();
+  }
+
   private void allowingSniperBidding() {
     context.checking(new Expectations() {
       {
@@ -222,6 +240,25 @@ public class AcutinoSniperTest {
       {
         allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.WINNING)));
         then(sniperState.is("winning"));
+      }
+    });
+  }
+
+  private void ignoringAuction() {
+    context.checking(new Expectations() {
+      {
+        int bid = 123 + 45;
+        allowing(auction).bid(bid);
+      }
+    });
+  }
+
+  private void expectSniperToFailWhenItIs(final String state) {
+    context.checking(new Expectations() {
+      {
+        atLeast(1).of(sniperListener).sniperStateChanged(
+            new SniperSnapshot(ITEM_ID, 0, 0, SniperState.FAILED));
+        when(sniperState.is(state));
       }
     });
   }
