@@ -20,7 +20,15 @@ public class AuctionMessageTranslator implements MessageListener {
   }
 
   public void processMessage(Chat chat, Message message) {
-    AuctionEvent event = AuctionEvent.from(message.getBody());
+    try {
+      translate(message.getBody());
+    } catch (Exception parseException) {
+      listener.auctionFailed();
+    }
+  }
+
+  private void translate(String messageBody) throws Exception {
+    AuctionEvent event = AuctionEvent.from(messageBody);
 
     String type = event.type();
     if ("CLOSE".equals(type)) {
@@ -31,30 +39,40 @@ public class AuctionMessageTranslator implements MessageListener {
   }
 
   private static class AuctionEvent {
+    private class MissingValueException extends Exception {
+      public MissingValueException(String name) {
+        super(name);
+      }
+    }
+
     private final Map<String, String> fields = new HashMap<String, String>();
 
-    public String type() {
+    public String type() throws Exception {
       return get("Event");
     }
 
-    public int currentPrice() {
+    public int currentPrice() throws Exception {
       return getInt("CurrentPrice");
     }
 
-    public int increment() {
+    public int increment() throws Exception {
       return getInt("Increment");
     }
 
-    public PriceSource isFrom(String sniperId) {
+    public PriceSource isFrom(String sniperId) throws Exception {
       return sniperId.equals(bidder()) ? PriceSource.FromSniper : PriceSource.FromOtherBidder;
     }
 
-    private int getInt(String fieldName) {
+    private int getInt(String fieldName) throws Exception {
       return Integer.parseInt(get(fieldName));
     }
 
-    private String get(String fieldName) {
-      return fields.get(fieldName);
+    private String get(String fieldName) throws Exception {
+      String value = fields.get(fieldName);
+      if (null == value) {
+        throw new MissingValueException(fieldName);
+      }
+      return value;
     }
 
     private void addField(String field) {
@@ -62,7 +80,7 @@ public class AuctionMessageTranslator implements MessageListener {
       fields.put(pair[0].trim(), pair[1].trim());
     }
 
-    private String bidder() {
+    private String bidder() throws Exception {
       return get("Bidder");
     }
 

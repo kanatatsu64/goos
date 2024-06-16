@@ -22,6 +22,10 @@ public class AuctionSniper implements AuctionEventListener {
     notifyChange();
   }
 
+  public void auctionFailed() {
+    // TODO
+  }
+
   public void currentPrice(int price, int increment, PriceSource priceSource) {
     switch (priceSource) {
       case FromSniper:

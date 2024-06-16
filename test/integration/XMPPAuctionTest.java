@@ -45,6 +45,12 @@ public class XMPPAuctionTest {
       }
 
       @Override
+      public void auctionFailed() {
+        // TODO
+
+      }
+
+      @Override
       public void currentPrice(int price, int increment, PriceSource priceSource) {
         // TODO
       }

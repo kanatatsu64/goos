@@ -38,6 +38,10 @@ public class ApplicationRunner {
     driver.showsSniperStatus(auction.getItemId(), lastPrice, lastPrice, "Won");
   }
 
+  public void showsSniperHasFailed(FakeAuctionServer auction) {
+    driver.showsSniperStatus(auction.getItemId(), 0, 0, "Failed");
+  }
+
   public void hasShownSniperIsBidding(FakeAuctionServer auction, int lastPrice, int lastBid) {
     driver.showsSniperStatus(auction.getItemId(), lastPrice, lastBid, "Bidding");
   }
@@ -48,6 +52,10 @@ public class ApplicationRunner {
 
   public void hasShownSniperIsWinning(FakeAuctionServer auction, int winningBid) {
     driver.showsSniperStatus(auction.getItemId(), winningBid, winningBid, "Winning");
+  }
+
+  public void reportsInvalidMessage(FakeAuctionServer auction, String invalidMessage) {
+    // TODO
   }
 
   public void stop() {
