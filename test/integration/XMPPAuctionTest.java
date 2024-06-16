@@ -3,8 +3,6 @@ package test.integration;
 import java.util.concurrent.CountDownLatch;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
@@ -55,14 +53,5 @@ public class XMPPAuctionTest {
         // TODO
       }
     };
-  }
-
-  private static XMPPConnection connection(String hostname, String username, String password, String resource)
-      throws XMPPException {
-    XMPPConnection connection = new XMPPConnection(hostname);
-    connection.connect();
-    connection.login(username, password, resource);
-
-    return connection;
   }
 }

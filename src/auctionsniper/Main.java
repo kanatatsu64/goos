@@ -7,7 +7,6 @@ import javax.swing.SwingUtilities;
 
 import auctionsniper.interfaces.AuctionHouse;
 import auctionsniper.ui.MainWindow;
-import auctionsniper.ui.SnipersTableModel;
 import auctionsniper.xmpp.XMPPAuctionHouse;
 
 public class Main {
