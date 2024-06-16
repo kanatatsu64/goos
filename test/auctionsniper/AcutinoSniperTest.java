@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import auctionsniper.AuctionSniper;
+import auctionsniper.Item;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
 import auctionsniper.interfaces.Auction;
@@ -26,7 +27,8 @@ public class AcutinoSniperTest {
   private final SniperListener sniperListener = context.mock(SniperListener.class);
   private final Auction auction = context.mock(Auction.class);
   private final SniperSnapshot snapshot = SniperSnapshot.joining(ITEM_ID);
-  private final AuctionSniper sniper = new AuctionSniper(auction, snapshot);
+  private final Item item = new Item(ITEM_ID, 1000);
+  private final AuctionSniper sniper = new AuctionSniper(auction, snapshot, item);
 
   @Before
   public void addSniperListener() {
@@ -96,7 +98,7 @@ public class AcutinoSniperTest {
 
   @Test
   public void bidsHigherAndReportsBiddingWhenNewPriceArrives() {
-    final int price = 1001;
+    final int price = 300;
     final int increment = 25;
     final int bid = price + increment;
 
@@ -133,6 +135,95 @@ public class AcutinoSniperTest {
     sniper.currentPrice(135, 45, PriceSource.FromSniper);
 
     context.assertIsSatisfied();
+  }
+
+  @Test
+  public void doesNotBidAndReportsLosingIfSubsequentPriceIsAboveStopPrice() {
+    allowingSniperBidding();
+    context.checking(new Expectations() {
+      {
+        int bid = 123 + 45;
+        allowing(auction).bid(bid);
+        atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, bid, SniperState.LOSING));
+        when(sniperState.is("bidding"));
+      }
+    });
+
+    sniper.currentPrice(123, 45, PriceSource.FromOtherBidder);
+    sniper.currentPrice(2345, 25, PriceSource.FromOtherBidder);
+  }
+
+  @Test
+  public void reportsLostIfAuctionClosesWhenLosing() {
+    allowingSniperBidding();
+    context.checking(new Expectations() {
+      {
+        int bid = 123 + 45;
+        allowing(auction).bid(bid);
+        atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, bid, SniperState.LOSING));
+        when(sniperState.is("bidding"));
+        then(sniperState.is("losing"));
+        atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, bid, SniperState.LOST));
+        when(sniperState.is("losing"));
+      }
+    });
+
+    sniper.currentPrice(123, 45, PriceSource.FromOtherBidder);
+    sniper.currentPrice(2345, 25, PriceSource.FromOtherBidder);
+    sniper.auctionClosed();
+  }
+
+  @Test
+  public void continuesToBeLosingOnceStopPriceHasBeenReached() {
+    allowingSniperBidding();
+    context.checking(new Expectations() {
+      {
+        int bid = 123 + 45;
+        allowing(auction).bid(bid);
+        atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, bid, SniperState.LOSING));
+        when(sniperState.is("bidding"));
+        then(sniperState.is("losing"));
+        atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, bid, SniperState.LOST));
+        when(sniperState.is("losing"));
+      }
+    });
+
+    sniper.currentPrice(123, 45, PriceSource.FromOtherBidder);
+    sniper.currentPrice(2345, 25, PriceSource.FromOtherBidder);
+    sniper.auctionClosed();
+  }
+
+  @Test
+  public void doesNotBidAndReportsLosingIfPriceAfterWinningIsAboveStopPrice() {
+    allowingSniperWinning();
+    context.checking(new Expectations() {
+      {
+        int bid = 123;
+        atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, bid, SniperState.LOSING));
+        when(sniperState.is("winning"));
+      }
+    });
+
+    sniper.currentPrice(123, 45, PriceSource.FromSniper);
+    sniper.currentPrice(2345, 25, PriceSource.FromOtherBidder);
+  }
+
+  private void allowingSniperBidding() {
+    context.checking(new Expectations() {
+      {
+        allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.BIDDING)));
+        then(sniperState.is("bidding"));
+      }
+    });
+  }
+
+  private void allowingSniperWinning() {
+    context.checking(new Expectations() {
+      {
+        allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.WINNING)));
+        then(sniperState.is("winning"));
+      }
+    });
   }
 
   private Matcher<SniperSnapshot> aSniperThatIs(final SniperState state) {

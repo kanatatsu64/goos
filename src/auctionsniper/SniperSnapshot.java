@@ -1,5 +1,7 @@
 package auctionsniper;
 
+import static java.lang.String.format;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -24,8 +26,12 @@ public class SniperSnapshot {
     return new SniperSnapshot(itemId, newLastPrice, newLastBid, SniperState.BIDDING);
   }
 
+  public SniperSnapshot losing(int newLastPrice) {
+    return new SniperSnapshot(itemId, newLastPrice, lastBid, SniperState.LOSING);
+  }
+
   public SniperSnapshot winning(int newLastPrice) {
-    return new SniperSnapshot(itemId, newLastPrice, lastBid, SniperState.WINNING);
+    return new SniperSnapshot(itemId, newLastPrice, newLastPrice, SniperState.WINNING);
   }
 
   public SniperSnapshot close() {
@@ -40,6 +46,11 @@ public class SniperSnapshot {
   @Override
   public int hashCode() {
     return HashCodeBuilder.reflectionHashCode(this);
+  }
+
+  @Override
+  public String toString() {
+    return format("SniperSnapshot(%s, %d, %d, %s)", itemId, lastPrice, lastBid, state);
   }
 
   public boolean isForSameItemAs(SniperSnapshot snapshot) {
