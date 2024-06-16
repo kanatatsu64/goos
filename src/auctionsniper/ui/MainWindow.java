@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import auctionsniper.Item;
 import auctionsniper.SniperPortfolio;
 import auctionsniper.interfaces.UserRequestListener;
 
@@ -21,6 +22,7 @@ public class MainWindow extends JFrame {
   public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
   public static final String SNIPERS_TABLE_NAME = "snipers table";
   public static final String NEW_ITEM_ID_NAME = "new item id";
+  public static final String NEW_ITEM_STOP_PRICE_NAME = "new stop price";
   public static final String JOIN_BUTTON_NAME = "join button";
 
   private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
@@ -59,20 +61,35 @@ public class MainWindow extends JFrame {
   private JPanel makeControls() {
     // <JPanel manager="flow">
     //// <JTextField name={NEW_ITEM_ID_NAME} columns=25 />
+    //// <JTextField name={NEW_ITEM_STOP_PRICE_NAME} columns=25 />
     //// <JButton name={JOIN_BUTTON_NAME}>Join Auction</JButton>
     // </JPanel>
     JPanel controls = new JPanel(new FlowLayout());
+
     final JTextField itemIdField = new JTextField();
     itemIdField.setColumns(25);
     itemIdField.setName(NEW_ITEM_ID_NAME);
     controls.add(itemIdField);
+
+    final JTextField stopPriceField = new JTextField();
+    stopPriceField.setColumns(25);
+    stopPriceField.setName(NEW_ITEM_STOP_PRICE_NAME);
+    controls.add(stopPriceField);
 
     JButton joinAuctionButton = new JButton("Join Auction");
     joinAuctionButton.setName(JOIN_BUTTON_NAME);
     joinAuctionButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        userRequests.announce().joinAuction(itemIdField.getText());
+        userRequests.announce().joinAuction(new Item(itemId(), stopPrice()));
+      }
+
+      private String itemId() {
+        return itemIdField.getText();
+      }
+
+      private int stopPrice() {
+        return Integer.decode(stopPriceField.getText());
       }
     });
     controls.add(joinAuctionButton);
